@@ -16,7 +16,7 @@ def signup(request):
 
     return render(request,'signup.html')
 
-def login(request):
+def Login(request):
     if request.method == 'POST':
        fnm=request.POST.get('fnm')
        pwd=request.POST.get('pwd')
@@ -27,3 +27,15 @@ def login(request):
        else:
           return redirect('/login')
     return render(request,'login.html')
+
+
+def todo(request):
+   if request.method == 'POST':
+      title=request.POST.get('title')
+      print(title)
+      obj=models.TODOO(title=title, user=request.user)
+      obj.save()
+      return redirect('/todopage')
+   
+   todos = TODOO.objects.filter(user=request.user)
+   return render(request,'todo.html',{'todos': todos})
