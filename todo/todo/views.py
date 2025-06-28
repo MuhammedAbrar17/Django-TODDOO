@@ -50,3 +50,12 @@ def edit_todo(request,srno):
       return redirect('/todopage')
     
    return render(request,'edit_todo.html',{"todo":todo_item})
+
+
+def delete_todo(request,srno):
+   todo = models.TODOO(srno = srno , user=request.user)
+   todo.delete()
+   print("todo was deleted")
+   return redirect('/todopage')
+
+
