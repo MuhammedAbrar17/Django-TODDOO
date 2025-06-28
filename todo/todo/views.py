@@ -1,4 +1,4 @@
-from django . shortcuts import render,redirect
+from django . shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from todo import models
 from todo.models import TODOO
@@ -39,3 +39,14 @@ def todo(request):
    
    todos = TODOO.objects.filter(user=request.user)
    return render(request,'todo.html',{'todos': todos})
+
+def edit_todo(request,srno):
+   todo_item = get_object_or_404(TODOO, srno=srno, user=request.user)
+
+   if request.method == 'POST':
+      new_title = request.POST.get('title')
+      todo_item.title = new_title
+      todo_item.save()
+      return redirect('/todopage')
+    
+   return render(request,'edit_todo.html',{"todo":todo_item})
