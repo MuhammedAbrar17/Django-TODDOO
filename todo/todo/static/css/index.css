@@ -146,3 +146,10 @@ body {
   color: #c5aeff;
   text-decoration: line-through;
 }
+.welcome-user {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 500;
+  font-size: 24px;
+}
