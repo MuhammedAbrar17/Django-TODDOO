@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from todo import models
 from todo.models import TODOO
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+
 
 def signup(request):
     if request.method=='POST':
@@ -28,18 +30,20 @@ def Login(request):
           return redirect('/login')
     return render(request,'login.html')
 
+@login_required(login_url='/login')
 
 def todo(request):
    if request.method == 'POST':
       title=request.POST.get('title')
       print(title)
-      obj=models.TODOO(title=title, user=request.user)
-      obj.save()
+      models.TODOO.objects.create(title = title, user= request.user)
       return redirect('/todopage')
-   
-   todos = TODOO.objects.filter(user=request.user)
+      
+   todos = TODOO.objects.filter(user=request.user).order_by('-date')
    return render(request,'todo.html',{'todos': todos})
 
+
+@login_required(login_url='/login')
 def edit_todo(request,srno):
    todo_item = get_object_or_404(TODOO, srno=srno, user=request.user)
 
@@ -51,7 +55,7 @@ def edit_todo(request,srno):
     
    return render(request,'edit_todo.html',{"todo":todo_item})
 
-
+@login_required(login_url='/login')
 def delete_todo(request,srno):
    todo = models.TODOO(srno = srno , user=request.user)
    todo.delete()
@@ -59,3 +63,6 @@ def delete_todo(request,srno):
    return redirect('/todopage')
 
 
+def signout(request):
+   logout(request)
+   return redirect('/login')
